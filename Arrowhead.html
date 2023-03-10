@@ -29,6 +29,7 @@
     let gfxScene = new GFX.Scene( {
         cameraPos : [4, 3, 4],
         controls:true,
+        defaultLights: true,
         axesHeight:10,
         displayStats:true} );
 
@@ -66,7 +67,7 @@
 
         geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
-        const material = new THREE.MeshBasicMaterial({ color: 0x990000, wireframe: true});
+        const material = new THREE.MeshLambertMaterial({ color: 0x990000, wireframe: true});
         const mesh = new THREE.Mesh(geometry, material);
 
         gfxScene.add(mesh);
@@ -100,6 +101,7 @@
      */
     function drawArrow ( locX, locY, locZ, scaleX, scaleY, scaleZ, rot ) {
 
+
         let TIPY        = 0.75;	// position in Y of arrow-head tip
         let TIPX        = 0.0;	// position in X of arrow-head tip
         let BASE        = 0.1;	// base of arrow-head in Y
@@ -112,7 +114,7 @@
         let NEG_THICKNESS   = -0.5;	// half-thickness of the arrow in Z
 
         // head of the arrow
-        let   	vA = { x:HEAD_WIDTH,  y:BASE,  z:THICKNESS };
+        let   	vA = { x:NEG_HEAD_WIDTH,  y:BASE,  z:THICKNESS };
         let		vB = {  x:TIPX,        y:TIPY,  z:THICKNESS };
         let		vC = {  x:HEAD_WIDTH,  y:BASE,  z:THICKNESS };
         let		vD = { x:NEG_HEAD_WIDTH,  y:BASE, z:NEG_THICKNESS };
@@ -129,10 +131,16 @@
         let		vM = { x:NEG_SHAFT_WIDTH, y:SHAFT_END, z:NEG_THICKNESS };
         let		vN = {  x:SHAFT_WIDTH, y:SHAFT_END, z:NEG_THICKNESS };
 
-        const arrowVerts = new Float32Array(135);
+        let nFaces = 16;
+        let nVerticesPerFace = 3;
+        let nColorComponents = 3;
+        let coordsPerVertex = 3;
+        let nVerts = nFaces * nVerticesPerFace * coordsPerVertex;
+
+        const arrowVerts = new Float32Array(nVerts);
         let  counter = { n: 0 };
 
-            // the head of the arrow
+        // the head of the arrow
         triangleFace( vC, vB, vA, arrowVerts, counter );
         triangleFace( vB, vC, vF, arrowVerts, counter  );
         triangleFace( vB, vF, vE, arrowVerts, counter  );
@@ -140,7 +148,7 @@
         triangleFace( vC, vD, vF, arrowVerts, counter  );
         triangleFace( vA, vB, vD, arrowVerts, counter  );
         triangleFace( vB, vE, vD, arrowVerts, counter  );
-        // triangleFace( vE, vF, vD );  don't need the bottom of the arrow!
+        triangleFace( vE, vF, vD, arrowVerts, counter );         //don't need the bottom of the arrow!
 
         // the tail, i.e. the box part of the arrow
         triangleFace( vG, vI, vJ, arrowVerts, counter  );
@@ -153,10 +161,14 @@
         triangleFace( vJ, vM, vN, arrowVerts, counter  );
 
         const arrowGeometry = new THREE.BufferGeometry();
-
         arrowGeometry.addAttribute('position', new THREE.BufferAttribute(arrowVerts, 3));
+        const arrowColors = [];
+        for ( let i=0; i<nVerts; i++ ) {
+            arrowColors.push( 255, 0, 0 );
+        }
+        arrowGeometry.addAttribute('color', new THREE.Float32BufferAttribute(arrowColors, 3));
 
-        const material = new THREE.MeshBasicMaterial({ color: 0xFF0000, wireframe: true});
+        const material = new THREE.MeshBasicMaterial({ vertexColors:true });
         const mesh = new THREE.Mesh(arrowGeometry, material);
 
         gfxScene.add(mesh);
@@ -169,6 +181,7 @@
      * @param vB
      * @param vC
      * @param arrowVerts
+     * @param counter
      * @constructor
      */
     function triangleFace ( vA, vB, vC, arrowVerts, counter ) {
