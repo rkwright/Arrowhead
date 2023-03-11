@@ -79,8 +79,8 @@
         const SHAFT_WIDTH     = 0.1;	// half-width of the arrow-shaft in X
         const NEG_SHAFT_WIDTH = -0.1;	// half-width of the arrow-shaft in X
         const SHAFT_END       = -0.5;	// end of the arrow-shaft in Y
-        const THICKNESS       = 0.5;	// half-thickness of the arrow in Z
-        const NEG_THICKNESS   = -0.5;	// half-thickness of the arrow in Z
+        const THICKNESS       = 0.1;	// half-thickness of the arrow in Z
+        const NEG_THICKNESS   = -0.1;	// half-thickness of the arrow in Z
 
         // head of the arrow
         let   	vA = { x:NEG_HEAD_WIDTH, y:BASE, z:THICKNESS };
@@ -141,11 +141,14 @@
         //}
         // arrowGeometry.addAttribute('color', new THREE.Float32BufferAttribute(arrowColors, 3));
 
-        const material = new THREE.MeshLambertMaterial({  color: 0xff00ff, side: THREE.DoubleSide, shading: THREE.FlatShading });
+        const material = new THREE.MeshLambertMaterial({  color: 0xffffff, side: THREE.DoubleSide, shading: THREE.FlatShading });
         const mesh = new THREE.Mesh(arrowGeometry, material);
+
+        mesh.rotateX(Math.HALF_PI);
 
         gfxScene.add(mesh);
     }
+
 
     /**
      * Defines single, normalized triangle face
