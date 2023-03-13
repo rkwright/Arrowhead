@@ -20,7 +20,9 @@
 </head>
 <body>
 <script>
-    const NUM_ARROW = 10;
+    const nX = 2;  // must be square
+    const nY = 2;
+    const NUM_ARROW = nX * nY;
     let arrowRay = [NUM_ARROW];
     let arrowMesh;
 
@@ -61,7 +63,7 @@
 
     function rotateArrows() {
         for ( let n=0; n<NUM_ARROW; n++ ) {
-            let rot = Math.random() * Math.HALF_PI / 20.0;
+            let rot = Math.random() * Math.HALF_PI / 50.0;
             arrowRay[n].rotateZ(rot);
             arrowRay[n].geometry.attributes.position.needsUpdate = true;
         }
@@ -141,8 +143,8 @@
         //const arrowColors = [];
         //for ( let i=0; i<nVerts; i++ ) {
         //    arrowColors.push( 255, 0, 0 );
-        //}4
-        const material = new THREE.MeshLambertMaterial({  color: 0xffffff, side: THREE.DoubleSide, flatShading: true });
+        //}
+        const material = new THREE.MeshLambertMaterial({  color: 0xffffff, flatShading: true });
         arrowMesh = new THREE.Mesh(arrowGeometry, material);
         arrowMesh.rotateX(Math.HALF_PI);
 
@@ -154,14 +156,14 @@
      * @param arrowMesh
      */
    function createArrows( arrowMesh ) {
-       //const material = new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true });
        let index = 0;
-       for ( let n=-5; n<5; n++ ) {
-           for ( let m=-5; m<5; m++ ) {
+       for ( let n=-nX/2; n<nX/2; n++ ) {
+           for ( let m=-nY/2; m<nY/2; m++ ) {
                arrowRay[index] = arrowMesh.clone();
                arrowRay[index].translateX(m);
                arrowRay[index].translateY(n);
-               gfxScene.add(arrowRay[n]);
+               gfxScene.add(arrowRay[index]);
+               index++;
            }
        }
    }
