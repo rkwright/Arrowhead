@@ -20,8 +20,8 @@
 </head>
 <body>
 <script>
-    const nX = 2;  // must be square
-    const nY = 2;
+    const nX = 10;  // must be square
+    const nY = 10;
     const NUM_ARROW = nX * nY;
     let arrowRay = [NUM_ARROW];
     let arrowMesh;
@@ -63,7 +63,7 @@
 
     function rotateArrows() {
         for ( let n=0; n<NUM_ARROW; n++ ) {
-            let rot = Math.random() * Math.HALF_PI / 50.0;
+            let rot = Math.random() * Math.HALF_PI / 100.0;
             arrowRay[n].rotateZ(rot);
             arrowRay[n].geometry.attributes.position.needsUpdate = true;
         }
@@ -115,8 +115,8 @@
         let  counter = { n: 0 };
 
         // the head of the arrow
-        triangleFace( vA, vB, vC, arrowVerts, arrowNorms, counter );
-        triangleFace( vF, vC, vB, arrowVerts, arrowNorms, counter  );
+        triangleFace( vC, vB, vA, arrowVerts, arrowNorms, counter );
+        triangleFace( vB, vC, vF, arrowVerts, arrowNorms, counter  );
         triangleFace( vB, vF, vE, arrowVerts, arrowNorms, counter  );
         triangleFace( vC, vA, vD, arrowVerts, arrowNorms, counter  );
         triangleFace( vC, vD, vF, arrowVerts, arrowNorms, counter  );
@@ -134,7 +134,7 @@
         triangleFace( vJ, vI, vM, arrowVerts, arrowNorms, counter  );
         triangleFace( vJ, vM, vN, arrowVerts, arrowNorms, counter  );
         triangleFace( vL, vN, vM, arrowVerts, arrowNorms, counter  );
-        triangleFace( vL, vK, vM, arrowVerts, arrowNorms, counter  );
+        triangleFace( vM, vK, vL, arrowVerts, arrowNorms, counter  );
 
         const arrowGeometry = new THREE.BufferGeometry();
         arrowGeometry.addAttribute('position', new THREE.BufferAttribute(arrowVerts, 3));
